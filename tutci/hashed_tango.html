@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ハッシュド単語</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Noto Sans Japanese", "ヒラギノ角ゴ ProN W3", Meiryo, sans-serif;
+        }
+
+        select,
+        textarea,
+        button {
+            margin: 5px 0;
+            width: 100%;
+            font-size: 1.5em;
+            vertical-align: top;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        button {
+            background-color: #5c97f7;
+            border: solid 1px #4873b9;
+            border-radius: 5px;
+            color: #ffffff;
+            line-height: 2;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        table {
+            float: left;
+            width: 50%;
+            text-align: center;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        tr {
+            font-size: 1.5em;
+        }
+
+        td {
+            border: solid 1px #888;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ハッシュド単語</h1>
+    <p>
+        単語置換型言語作成ツールです。
+        <br> 改行で複数入力
+    </p>
+    <textarea id="input"></textarea>
+    <select disabled>
+        <option>v1</option>
+    </select>
+    <button id="button">生成↓</button>
+    <textarea id="output"></textarea>
+    <h4>文字一覧</h4>
+    <div class="clearfix">
+        <table>
+            <tr>
+                <td>あ</td>
+                <td>い</td>
+                <td>う</td>
+                <td>え</td>
+                <td>お</td>
+            </tr>
+            <tr>
+                <td>か</td>
+                <td>き</td>
+                <td>く</td>
+                <td>け</td>
+                <td>こ</td>
+            </tr>
+            <tr>
+                <td>さ</td>
+                <td>し</td>
+                <td>す</td>
+                <td>せ</td>
+                <td>そ</td>
+            </tr>
+            <tr>
+                <td>た</td>
+                <td>ち</td>
+                <td>つ</td>
+                <td>て</td>
+                <td>と</td>
+            </tr>
+            <tr>
+                <td>な</td>
+                <td>に</td>
+                <td>ぬ</td>
+                <td>ね</td>
+                <td>の</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>は</td>
+                <td>ひ</td>
+                <td>ふ</td>
+                <td>へ</td>
+                <td>ほ</td>
+            </tr>
+            <tr>
+                <td>ま</td>
+                <td>み</td>
+                <td>む</td>
+                <td>め</td>
+                <td>も</td>
+            </tr>
+            <tr>
+                <td>や</td>
+                <td>　</td>
+                <td>ゆ</td>
+                <td>　</td>
+                <td>よ</td>
+            </tr>
+            <tr>
+                <td>ら</td>
+                <td>り</td>
+                <td>る</td>
+                <td>れ</td>
+                <td>ろ</td>
+            </tr>
+            <tr>
+                <td>わ</td>
+                <td>ゐ</td>
+                <td>　</td>
+                <td>ゑ</td>
+                <td>を</td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        (function () {
+            var input = document.getElementById("input");
+            var button = document.getElementById("button");
+            var output = document.getElementById("output");
+
+            var seg = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+            var S = 47;
+
+            // multiplier: A(0) == 1
+            var A = function (n) {
+                return 1 + n % 46;
+            };
+
+            // increment: B(0) != 0
+            var B = function (n) {
+                return 1 + n % 46;
+            };
+
+            function ston(s) {
+                var res = [];
+                for (var i = 0; i < s.length; i++)
+                    if (~seg.indexOf(s[i]))
+                        res.push(seg.indexOf(s[i]));
+                return res;
+            }
+
+            function ntos(n) {
+                var res = "";
+                for (var i = 0; i < n.length; i++)
+                    res += seg[n[i]];
+                return res;
+            }
+
+            function gen1(x) {
+                var L = x.length;
+                var r = [];
+                var car = 0;
+                var i, j;
+                for (i = 0; i < L; i++) r[i] = 0;
+                for (i = 0; i < L; i++) {
+                    for (j = 0; j < L - i; j++) {
+                        r[i + j] += x[i] * A(j);
+                    }
+                    r[i] += B(i);
+                    r[i] += car;
+                    car = Math.floor(r[i] / S);
+                    r[i] %= S;
+                }
+                return r;
+            }
+
+            function gen2(x) {
+                // 「１文字違えば全体が変わる」かつ「下位桁の非ランダム性を打ち消す」
+                // ためにひっくり返して２回やる
+                return gen1(gen1(x).reverse());
+            }
+
+            button.addEventListener("click", function () {
+                output.value = input.value.split("\n").map(function (line) {
+                    return ntos(gen2(ston(line)));
+                }).join("\n");
+            }, false);
+        })();
+
+    </script>
+</body>
+
+</html>
