@@ -1,9 +1,9 @@
-# POPPY PAPPY DAY - porpi panpi djedi
+## POPPY PAPPY DAY - porpi panpi djedi
 
 <table>
-<tr><th>カテゴリ<td>アニメ ポプテピピック ED
-<tr><th>from<td>日本語
-<tr><th>to<td>ロジバン
+<tr><th>カテゴリ</th><td>アニメ ポプテピピック ED</td></tr>
+<tr><th>from</th><td>日本語</td></tr>
+<tr><th>to</th><td>ロジバン</td></tr>
 </table>
 
 注：`;` は、構文的にはそこに `.i` を入れるべきだが ~~しつこいので~~ 取り除いたことを表す。
