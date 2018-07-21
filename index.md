@@ -2,6 +2,8 @@
 title: kepeken.github.io
 ---
 
+# kepeken.github.io
+
 ## 色々
 - [amuhiku](/amuhiku/) - 辞書編集・閲覧アプリ
 - [ごちうさで学ぶトキポナbot](/pilinponapona/)
@@ -9,5 +11,5 @@ title: kepeken.github.io
 - [ハッシュド単語](/tutci/hashed_tango)
 
 ## アカウント
-Twitter [@kepeken](https://twitter.com/kepeken)
-GitHub [kepeken](https://github.com/kepeken)
+- Twitter [@kepeken](https://twitter.com/kepeken)
+- GitHub [kepeken](https://github.com/kepeken)
