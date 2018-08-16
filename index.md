@@ -10,6 +10,9 @@ title: kepeken.github.io
 - [翻訳](/fanva/)
 - [ハッシュド単語](/tutci/hashed_tango)
 
+## 人工言語
+- [bpuu](/runbau/bpuu/)
+
 ## アカウント
 - Twitter [@kepeken](https://twitter.com/kepeken)
 - GitHub [kepeken](https://github.com/kepeken)
