@@ -72,51 +72,90 @@ class Node {
   }
 
   print() {
-    /**
-     * @param {Node} n
-     * @return {[number,string[]]}
-     */
-    function info(n) {
-      if (n.isNull) return [Big(0), ["0"]];
-      if (n.left.isNull && n.right.isNull) return [Big(1), ["1"]];
-      const
-        [leftInt, leftLines] = info(n.left),
-        [rightInt, rightLines] = info(n.right),
-        thisInt = mapping.ii2i(leftInt, rightInt);
-      let margin = -Infinity;
-      for (let i = Math.min(leftLines.length, rightLines.length); i--;) {
-        margin = Math.max(margin, 2 - leftLines[i].match(/ *$/)[0].length - rightLines[i].match(/^ */)[0].length);
-      }
-      let line0 = thisInt.toFixed();
-      let line1 = "";
-      let expands = leftLines[0].match(/_* *$/)[0].length + margin + rightLines[0].match(/^ *_*/)[0].length - 2;
-      if (expands < line0.length) {
-        margin += line0.length - expands;
-        expands = line0.length;
-      } else {
-        if ((expands - line0.length) % 2 === 1) {
-          margin += 1;
-          expands += 1;
+    function getLines(n) {
+      const thisInt = n.toInt().toFixed();
+      if (n.isNull) {
+        return null;
+      } else if (n.left.isNull && n.right.isNull) {
+        return ["1"];
+      } else if (n.left.isNull) {
+        const rightLines = getLines(n.right);
+        const pad = " ".repeat(rightLines[0].match(/\d+_* *$/)[0].length);
+        let line0 = thisInt + " " + pad;
+        let line1 = "\\" + pad;
+        if (line0.length > rightLines[0].length) {
+          return [
+            line0,
+            line1.padStart(line0.length),
+            ...rightLines.map(line => line.padStart(line0.length))
+          ];
+        } else {
+          return [
+            line0.padStart(rightLines[0].length),
+            line1.padStart(rightLines[0].length),
+            ...rightLines
+          ];
         }
-        let us = "_".repeat((expands - line0.length) / 2);
-        line0 = us + line0 + us;
+      } else if (n.right.isNull) {
+        const leftLines = getLines(n.left);
+        const pad = " ".repeat(leftLines[0].match(/^ *_*\d+/)[0].length);
+        let line0 = pad + " " + thisInt;
+        let line1 = pad + "/";
+        if (line0.length > leftLines[0].length) {
+          return [
+            line0,
+            line1.padEnd(line0.length),
+            ...leftLines.map(line => line.padEnd(line0.length))
+          ];
+        } else {
+          return [
+            line0.padEnd(leftLines[0].length),
+            line1.padEnd(leftLines[0].length),
+            ...leftLines
+          ];
+        }
+      } else {
+        let leftLines = getLines(n.left), rightLines = getLines(n.right);
+        let margin = -Infinity;
+        for (let i = Math.min(leftLines.length, rightLines.length); i--;) {
+          margin = Math.max(margin, 2 - leftLines[i].match(/ *$/)[0].length - rightLines[i].match(/^ */)[0].length);
+        }
+        let line0 = thisInt;
+        let line1 = "";
+        let expands = leftLines[0].match(/_* *$/)[0].length + margin + rightLines[0].match(/^ *_*/)[0].length - 2;
+        if (expands < line0.length) {
+          margin += line0.length - expands;
+          expands = line0.length;
+        } else {
+          if ((expands - line0.length) % 2 === 1) {
+            margin += 1;
+            expands += 1;
+          }
+          let us = "_".repeat((expands - line0.length) / 2);
+          line0 = us + line0 + us;
+        }
+        if (-margin > leftLines[0].length) {
+          leftLines = leftLines.map(line => line.padStart(-margin));
+        } else if (-margin > rightLines[0].length) {
+          rightLines = rightLines.map(line => line.padEnd(-margin));
+        }
+        line0 = " " + line0 + " ";
+        line1 = "/" + " ".repeat(expands) + "\\";
+        let ls = " ".repeat(leftLines[0].match(/^ *_*\d+/)[0].length);
+        let rs = " ".repeat(rightLines[0].match(/\d+_* *$/)[0].length);
+        line0 = ls + line0 + rs;
+        line1 = ls + line1 + rs;
+        const thisLines = [line0, line1];
+        const width = line0.length;
+        for (let i = 0, len = Math.max(leftLines.length, rightLines.length); i < len; i++) {
+          let ll = (leftLines[i] || "").replace(/ *$/, "");
+          let rl = (rightLines[i] || "").replace(/^ */, "");
+          thisLines.push(ll + " ".repeat(width - ll.length - rl.length) + rl);
+        }
+        return thisLines;
       }
-      line1 = "/" + " ".repeat(expands) + "\\";
-      let ls = " ".repeat(leftLines[0].match(/^ *_*\d+/)[0].length);
-      let rs = " ".repeat(rightLines[0].match(/\d+_* *$/)[0].length);
-      line0 = ls + " " + line0 + " " + rs;
-      line1 = ls + line1 + rs;
-      let thisLines = [line0, line1];
-      const width = line0.length;
-      for (let i = 0, len = Math.max(leftLines.length, rightLines.length); i < len; i++) {
-        let ll = (leftLines[i] || "").replace(/ *$/, "");
-        let rl = (rightLines[i] || "").replace(/^ */, "");
-        console.log(width, ll, rl, thisInt.toFixed());
-        thisLines.push(ll + " ".repeat(width - ll.length - rl.length) + rl);
-      }
-      return [thisInt, thisLines];
     }
-    const [, lines] = info(this);
+    const lines = getLines(this) || ["0"];
     return lines.join("\n") + "\n";
   }
 }
