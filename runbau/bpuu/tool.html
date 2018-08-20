@@ -38,10 +38,12 @@
   <script src="lib.js"></script>
   <script>
     $mapping.onchange = function () {
-      mapping = mappings[this.value];
-      const node = Node.fromInt($number.value);
-      $dyck.value = node.toString();
-      $tree.textContent = node.print();
+      try {
+        mapping = mappings[this.value];
+        const node = Node.fromInt($number.value);
+        $dyck.value = node.toString();
+        $tree.textContent = node.print();
+      } catch (e) { }
     };
     $number.oninput = function () {
       try {
