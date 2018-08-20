@@ -23,6 +23,11 @@
 <body>
   <h1>bpuu tool</h1>
   <div>
+    <select id="$mapping">
+      <option value="0">kolmio</option>
+      <option value="1">neliö</option>
+    </select>
+    <br>
     <input type="text" id="$number" placeholder="自然数表記">
     <br>
     <input type="text" id="$dyck" placeholder="括弧表記">
@@ -32,6 +37,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/5.1.2/big.min.js"></script>
   <script src="lib.js"></script>
   <script>
+    $mapping.onchange = function () {
+      mapping = mappings[this.value];
+      const node = Node.fromInt($number.value);
+      $dyck.value = node.toString();
+      $tree.textContent = node.print();
+    };
     $number.oninput = function () {
       try {
         const node = Node.fromInt(this.value);

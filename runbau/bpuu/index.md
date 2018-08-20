@@ -78,8 +78,7 @@ y = z-(m-1)m/2-1
 ```
 
 #### 第３案
-
-https://twitter.com/kepeken/status/1031492656528941059
+[https://twitter.com/kepeken/status/1031492656528941059](https://twitter.com/kepeken/status/1031492656528941059)
 
 |     |  0|  1|  2|  3|
 |:---:|:-:|:-:|:-:|:-:|
@@ -91,17 +90,17 @@ https://twitter.com/kepeken/status/1031492656528941059
 ##### f
 ```
 z = switch x <=> y
-      case lt: y**2+x+1
-      case eq: y**2+x+1
-      case gt: (x+1)**2-y
+      case lt: (y+1)**2-x
+      case eq: x**2+y+1
+      case gt: x**2+y+1
 ```
 ##### f^-1
 ```
 m = sqrt(z-1) として
 (x, y) = switch z <=> m*(m+1)+1
-           case lt: (z-m**2-1, m)
+           case lt: (m, z-m**2-1)
            case eq: (m, m)
-           case gt: (m, (m+1)**2-z)
+           case gt: ((m+1)**2-z, m)
 ```
 
 ## 語彙
