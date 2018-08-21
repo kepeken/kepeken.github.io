@@ -58,6 +58,11 @@ class Node {
     Object.freeze(this);
   }
 
+  height() {
+    if (this.isNull) return 0;
+    return Math.max(this.left.height(), this.right.height()) + 1;
+  }
+
   toInt() {
     if (this.isNull) return Big(0);
     return mapping.ii2i(this.left.toInt(), this.right.toInt());
@@ -187,5 +192,25 @@ class Node {
     }
     const lines = getLines(this) || ["0"];
     return lines.join("\n") + "\n";
+  }
+
+  printh() {
+    function silver(x) {
+      return Math.round((x * Math.SQRT1_2) * 1e6) / 1e6;
+    }
+    // dir: [up right down left]
+    function getPath(n, dir, size) {
+      let d = "";
+      if (n.isNull) return d;
+      d += "vh"[dir & 1] + (1 - (dir & 2)) * size;
+      d += getPath(n.left, (dir + 1) & 3, silver(size));
+      d += getPath(n.right, (dir + 3) & 3, silver(size));
+      d += "vh"[dir & 1] + ((dir & 2) - 1) * size;
+      return d;
+    }
+    const width = this.height() * 40;
+    const height = silver(width);
+    const path = getPath(this, 2, height / 2);
+    return `<svg width="${width}" height="${height}"><path d="M${width / 2} ${height}${path}" stroke="black"/></svg>`;
   }
 }

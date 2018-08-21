@@ -17,6 +17,12 @@
       width: 100%;
       font-size: 1rem;
     }
+
+    .border {
+      display: inline-block;
+      border: 1px solid #aaa;
+      padding: 10px;
+    }
   </style>
 </head>
 
@@ -27,7 +33,9 @@
     <br>
     <input type="text" id="$dyck" placeholder="括弧表記">
     <br>
-    <pre id="$tree"></pre>
+    <pre id="$tree" class="border"></pre>
+    <br>
+    <div id="$htree" class="border"></div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/5.1.2/big.min.js"></script>
   <script src="lib.js"></script>
@@ -37,6 +45,7 @@
         const node = Node.fromInt(this.value);
         $dyck.value = node.toString();
         $tree.textContent = node.print();
+        $htree.innerHTML = node.printh();
       } catch (e) { }
     };
     $dyck.oninput = function () {
@@ -44,6 +53,7 @@
         const node = Node.fromString(this.value);
         $number.value = node.toInt().toFixed();
         $tree.textContent = node.print();
+        $htree.innerHTML = node.printh();
       } catch (e) { }
     };
   </script>
