@@ -48,7 +48,7 @@ const mappings = [
   },
 ];
 
-let mapping = mappings[0];
+let mapping = mappings[1];
 
 class Node {
   constructor(...args) {
@@ -148,7 +148,7 @@ class Node {
         let leftLines = getLines(n.left), rightLines = getLines(n.right);
         let margin = -Infinity;
         for (let i = Math.min(leftLines.length, rightLines.length); i--;) {
-          margin = Math.max(margin, 2 - leftLines[i].match(/ *$/)[0].length - rightLines[i].match(/^ */)[0].length);
+          margin = Math.max(margin, 3 - leftLines[i].match(/ *$/)[0].length - rightLines[i].match(/^ */)[0].length);
         }
         let line0 = thisInt;
         let line1 = "";
