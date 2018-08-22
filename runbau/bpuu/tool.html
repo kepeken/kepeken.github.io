@@ -36,6 +36,8 @@
     <pre id="$tree" class="border"></pre>
     <br>
     <div id="$htree" class="border"></div>
+    <br>
+    <pre id="$zigzag" class="border"></pre>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/big.js/5.1.2/big.min.js"></script>
   <script src="lib.js"></script>
@@ -46,6 +48,7 @@
         $dyck.value = node.toString();
         $tree.textContent = node.print();
         $htree.innerHTML = node.printh();
+        $zigzag.textContent = node.printz();
       } catch (e) { }
     };
     $dyck.oninput = function () {
@@ -54,6 +57,7 @@
         $number.value = node.toInt().toFixed();
         $tree.textContent = node.print();
         $htree.innerHTML = node.printh();
+        $zigzag.textContent = node.printz();
       } catch (e) { }
     };
   </script>

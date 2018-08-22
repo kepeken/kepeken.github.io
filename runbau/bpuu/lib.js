@@ -213,4 +213,20 @@ class Node {
     const path = getPath(this, 2, height / 2);
     return `<svg width="${width}" height="${height}"><path d="M${width / 2} ${height}${path}" stroke="black"/></svg>`;
   }
+
+  printz() {
+    const lines = [];
+    let space = 0;
+    function put(n, idx) {
+      if (n.isNull) return;
+      lines[idx] = (lines[idx] || "").padEnd(space) + "/";
+      space++;
+      put(n.left, idx + 1);
+      lines[idx] = lines[idx].padEnd(space) + "\\";
+      space++;
+      put(n.right, idx);
+    }
+    put(this, 0);
+    return lines.reverse().join("\n") + "\n";
+  }
 }
