@@ -1,54 +1,32 @@
 Big.DP = 0;
 Big.RM = 0;
 
-const mappings = [
-  // kolmio
-  {
-    ii2i(x, y) {
-      // (x+y)(x+y+1)/2+y+1
-      return x.plus(y).times(x.plus(y).plus(1)).div(2).plus(y).plus(1);
-    },
-    i2ii(z) {
-      // (sqrt(8z-7)-1)/2+1
-      const m = z.times(8).minus(7).sqrt().minus(1).div(2).plus(1);
-      return [
-        // m(m+1)/2-z
-        m.times(m.plus(1)).div(2).minus(z),
-        // z-(m-1)m/2-1
-        z.minus(m.minus(1).times(m).div(2)).minus(1)
-      ];
-    },
+const mapping = {
+  ii2i(x, y) {
+    // x <=> y
+    switch (x.cmp(y)) {
+      // case lt: (y+1)**2-x
+      case -1: return y.plus(1).pow(2).minus(x);
+      // case eq: x**2+y+1
+      case 0: return x.pow(2).plus(y).plus(1);
+      // case gt: x**2+y+1
+      case 1: return x.pow(2).plus(y).plus(1);
+    }
   },
-  // neliö
-  {
-    ii2i(x, y) {
-      // x <=> y
-      switch (x.cmp(y)) {
-        // case lt: (y+1)**2-x
-        case -1: return y.plus(1).pow(2).minus(x);
-        // case eq: x**2+y+1
-        case 0: return x.pow(2).plus(y).plus(1);
-        // case gt: x**2+y+1
-        case 1: return x.pow(2).plus(y).plus(1);
-      }
-    },
-    i2ii(z) {
-      // sqrt(z-1)
-      const m = z.minus(1).sqrt();
-      // z <=> m(m+1)+1
-      switch (z.cmp(m.times(m.plus(1)).plus(1))) {
-        // case lt: (m, z-m**2-1)
-        case -1: return [m, z.minus(m.pow(2)).minus(1)];
-        // case eq: (m, m)
-        case 0: return [m, m];
-        // case gt: ((m+1)**2-z, m)
-        case 1: return [m.plus(1).pow(2).minus(z), m];
-      }
-    },
+  i2ii(z) {
+    // sqrt(z-1)
+    const m = z.minus(1).sqrt();
+    // z <=> m(m+1)+1
+    switch (z.cmp(m.times(m.plus(1)).plus(1))) {
+      // case lt: (m, z-m**2-1)
+      case -1: return [m, z.minus(m.pow(2)).minus(1)];
+      // case eq: (m, m)
+      case 0: return [m, m];
+      // case gt: ((m+1)**2-z, m)
+      case 1: return [m.plus(1).pow(2).minus(z), m];
+    }
   },
-];
-
-let mapping = mappings[1];
+};
 
 class Node {
   constructor(...args) {
