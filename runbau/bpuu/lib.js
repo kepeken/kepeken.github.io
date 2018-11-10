@@ -207,4 +207,71 @@ class Node {
     put(this, 0);
     return lines.reverse().join("\n") + "\n";
   }
+
+  printc() {
+    const dr = 12;
+    const WIDTH = dr * 2 * this.height();
+    const HEIGHT = dr * 2 * this.height();
+    const { sin, cos, PI } = Math;
+    const TAU = PI * 2;
+    let d = "";
+    let curr = [
+      { node: this, r: 0, theta: TAU / 4 }
+    ];
+    while (curr.length) {
+      let next = [];
+      curr.forEach(({ node, r: r0, theta: theta0 }, idx) => {
+        if (node.left.isNull && node.right.isNull) return;
+        d += `M ${r0 * cos(theta0)} ${r0 * sin(theta0)}\n`;
+        let r1 = r0 + dr;
+        let sx = r1 * cos(theta0);
+        let sy = r1 * sin(theta0);
+        d += `L ${sx} ${sy}\n`;
+        if (!node.left.isNull) {
+          d += `M ${sx} ${sy}\n`;
+          let neighbor = curr[(idx - 1 + curr.length) % curr.length];
+          let delta = (neighbor.theta - theta0 + TAU) % TAU;
+          if (delta < 1e-15) delta = TAU;
+          delta = neighbor.node.right.isNull
+            ? delta / 2
+            : delta / 4;
+          let theta1 = (theta0 + delta) % TAU;
+          let tx = r1 * cos(theta1);
+          let ty = r1 * sin(theta1);
+          d += `A ${r1} ${r1} ${theta0} 0 1 ${tx} ${ty}\n`;
+          next.push({
+            node: node.left,
+            r: r1,
+            theta: theta1
+          });
+        }
+        if (!node.right.isNull) {
+          d += `M ${sx} ${sy}\n`;
+          let neighbor = curr[(idx + 1) % curr.length];
+          let delta = (theta0 - neighbor.theta + TAU) % TAU;
+          if (delta < 1e-15) delta = TAU;
+          delta = neighbor.node.left.isNull
+            ? delta / 2
+            : delta / 4;
+          let theta1 = (theta0 - delta + TAU) % TAU;
+          let tx = r1 * cos(theta1);
+          let ty = r1 * sin(theta1);
+          d += `A ${r1} ${r1} ${theta0} 0 0 ${tx} ${ty}\n`;
+          next.push({
+            node: node.right,
+            r: r1,
+            theta: theta1
+          });
+        }
+      });
+      curr = next;
+    }
+    return `<svg
+      width="${WIDTH}"
+      height="${HEIGHT}"
+      viewBox="${-WIDTH / 2}, ${-HEIGHT / 2}, ${WIDTH}, ${HEIGHT}"
+    >
+      <path d="${d}" stroke="black" fill="none"/>
+    </svg>`
+  }
 }
