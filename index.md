@@ -18,7 +18,7 @@ title: kepeken.github.io
 - [ハッシュド単語](/tutci/hashed_tango)
 
 ## 作っている言語
-- [bpuu](/runbau/bpuu/)
+- [bipuuk / 众語](/runbau/bpuu/)
 - nanaremo
 
 ## 翻訳
