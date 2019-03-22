@@ -18,10 +18,7 @@ title: kepeken.github.io
 - [ハッシュド単語](/tutci/hashed_tango)
 
 ## 作っている言語
-- bipuuk / 众語
-  - [ドキュメント](https://kepeken.gitbook.io/bipuuk/)
-  - [パーサ](https://kepeken.github.io/bipuuk/)
-  - [レポジトリ](https://github.com/kepeken/bipuuk)
+- [bipuuk / 众語](/bipuuk/)
 - nanaremo
 
 ## 翻訳
