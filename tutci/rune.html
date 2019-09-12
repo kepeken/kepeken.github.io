@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Conscript</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+  <div id="app" class="container py-5">
+    <div>
+      <input type="text" v-model="filter" class="form-control" placeholder="RegExp">
+    </div>
+    <div>{{ filteredPatterns.ok.length }} patterns found</div>
+    <div>
+      <span v-for="pattern in filteredPatterns.ok">
+        <svg v-bind:width="rune.width" v-bind:height="rune.height" v-on:click="() => alert(getData(pattern))">
+          <polyline v-bind:points="getPath(pattern)" stroke="black" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </span>
+      <hr>
+      <span v-for="pattern in filteredPatterns.ng">
+        <svg v-bind:width="rune.width" v-bind:height="rune.height" v-on:click="() => alert(getData(pattern))">
+          <polyline v-bind:points="getPath(pattern)" stroke="black" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </span>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+  <script>
+    (function () {
+      const P = 5;
+      const W = 20;
+      const dots = [
+        { x: P, y: P },
+        { x: P, y: P + W },
+        { x: P, y: P + W * 2 },
+        { x: P + W, y: P },
+        { x: P + W, y: P + W },
+        { x: P + W, y: P + W * 2 },
+      ];
+
+      let res = [];
+
+      const dfs = (acc) => {
+        for (let i = 0; i < 6; ++i) {
+          if (!acc.includes(i)) {
+            dfs([...acc, i]);
+          }
+        }
+        res.push(acc);
+      };
+
+      dfs([]);
+
+      const app = new Vue({
+        el: '#app',
+        data: {
+          rune: {
+            width: P * 2 + W,
+            height: P * 2 + W * 2,
+          },
+          filter: '',
+          patterns: res,
+        },
+        computed: {
+          filteredPatterns() {
+            const re = new RegExp(this.filter);
+            const ok = [];
+            const ng = [];
+            this.patterns.forEach((seq) => {
+              if (re.test(seq.join(""))) {
+                ok.push(seq);
+              } else {
+                ng.push(seq);
+              }
+            });
+            return { ok, ng };
+          },
+        },
+        methods: {
+          getData(seq) {
+            return seq.join(', ');
+          },
+          getPath(seq) {
+            return seq.map((i) => `${dots[i].x},${dots[i].y}`).join(' ');
+          },
+        },
+      });
+    })();
+  </script>
+</body>
+
+</html>
