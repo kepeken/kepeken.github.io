@@ -13,7 +13,7 @@
 <body>
   <div id="app" class="container py-5">
     <div>
-      <input type="text" v-model="filter" class="form-control" placeholder="RegExp">
+      <input type="text" v-model="filter" class="form-control" placeholder="Input RegExp">
     </div>
     <div>{{ filteredPatterns.ok.length }} patterns found</div>
     <div>
@@ -26,7 +26,7 @@
       <hr>
       <span v-for="pattern in filteredPatterns.ng">
         <svg v-bind:width="rune.width" v-bind:height="rune.height" v-on:click="() => alert(getData(pattern))">
-          <polyline v-bind:points="getPath(pattern)" stroke="black" fill="none" stroke-linecap="round"
+          <polyline v-bind:points="getPath(pattern)" stroke="gray" fill="none" stroke-linecap="round"
             stroke-linejoin="round" />
         </svg>
       </span>
@@ -59,6 +59,33 @@
 
       dfs([]);
 
+      // 一本以上は線を引く
+      res = res.filter((seq) => seq.length > 1);
+
+      // 見た目上同じものをまとめる
+      const uniq = (arr) => {
+        return [...new Set(arr)];
+      };
+      const groups = new Map();
+      res.forEach((seq) => {
+        const con = [];
+        for (let i = 0; i < seq.length - 1; ++i) {
+          const [a, b] = [seq[i], seq[i + 1]].sort();
+          if (a == 0 && b == 2) {
+            con.push(`01`, `12`);
+          } else if (a == 3 && b == 5) {
+            con.push(`34`, `45`);
+          } else {
+            con.push(`${a}${b}`);
+          }
+        }
+        const key = uniq(con).sort().join('.');
+        if (!groups.has(key)) {
+          groups.set(key, []);
+        }
+        groups.get(key).push(seq);
+      });
+
       const app = new Vue({
         el: '#app',
         data: {
@@ -67,29 +94,39 @@
             height: P * 2 + W * 2,
           },
           filter: '',
-          patterns: res,
+          groups: [...groups.values()],
         },
         computed: {
           filteredPatterns() {
             const re = new RegExp(this.filter);
             const ok = [];
             const ng = [];
-            this.patterns.forEach((seq) => {
-              if (re.test(seq.join(""))) {
-                ok.push(seq);
-              } else {
-                ng.push(seq);
+            this.groups.forEach((seqs) => {
+              const okSeqs = [];
+              const ngSeqs = [];
+              seqs.forEach((seq) => {
+                if (re.test(seq.join(""))) {
+                  okSeqs.push(seq);
+                } else {
+                  ngSeqs.push(seq);
+                }
+              });
+              if (okSeqs.length > 0) {
+                ok.push(okSeqs);
+              }
+              if (ngSeqs.length > 0) {
+                ng.push(ngSeqs);
               }
             });
             return { ok, ng };
           },
         },
         methods: {
-          getData(seq) {
-            return seq.join(', ');
+          getData(seqs) {
+            return seqs.map((seq) => seq.join(', ')).join('\n');
           },
-          getPath(seq) {
-            return seq.map((i) => `${dots[i].x},${dots[i].y}`).join(' ');
+          getPath(seqs) {
+            return seqs[0].map((i) => `${dots[i].x},${dots[i].y}`).join(' ');
           },
         },
       });
