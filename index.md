@@ -6,18 +6,18 @@ title: kepeken.github.io
 
 人工言語やプログラミングをします。
 
-## 学んでいる人工言語
+## 学習
 - toki pona
 - lojban
 - Esperanto
 
-## 作っ（た｜ている）もの
+## 開発
 - [amuhiku](/amuhiku/) - 辞書編集・閲覧アプリ
-- [ごちうさで学ぶトキポナbot](/pilinponapona/)
-- ごちうさで学ぶロジバンbot
+- [ごちうさで学ぶトキポナbot](https://github.com/kepeken/pilinponapona/tree/master/accounts/pilinponapona)
+- [きららで学ぶロジバンbot](https://github.com/kepeken/pilinponapona/tree/master/accounts/kirara_jbo)
 - [ハッシュド単語](/tutci/hashed_tango)
 
-## 作っている言語
+## 創作
 - [bipuuk / 众語](/bipuuk/)
 - nanaremo
 
